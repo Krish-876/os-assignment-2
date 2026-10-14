@@ -27,7 +27,10 @@ cd linux-6.8
 python3 "$HERE/hooks/apply_hooks.py" "$WORK/linux-6.8"
 
 # finish the config before the first build (later changes cause full rebuilds)
-cp /boot/config-"$(uname -r)" .config
+if [ ! -f .config ]; then
+    cp /boot/config-"$(uname -r)" .config
+    yes "" | make localmodconfig
+fi
 scripts/config --disable SYSTEM_TRUSTED_KEYS
 scripts/config --disable SYSTEM_REVOCATION_KEYS
 scripts/config --disable DEBUG_INFO
@@ -35,6 +38,8 @@ scripts/config --disable DEBUG_INFO_BTF
 scripts/config --set-str LOCALVERSION "-forkguard"
 scripts/config --enable SATA_AHCI      # disk driver must be built in (=y)
 scripts/config --enable VIRTIO_BLK     # otherwise boot drops to (initramfs)
+scripts/config --enable NVME_CORE      # NVMe driver built in (=y) for bare-metal
+scripts/config --enable BLK_DEV_NVME   # otherwise bare-metal NVMe drops to (initramfs)
 make olddefconfig
 
 make -j"$(nproc)"

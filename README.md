@@ -14,13 +14,12 @@
 - Problem 4: Linux kernel 6.8, `-forkguard` local version.
 
 ```
-os-assignment-2/
-  README.md
-  p1/  report_card.c  input.txt  Makefile
-  p2/  workload_cpu.h workload_io.h prog_a_cpu.c prog_b_io.c run_experiments.sh Makefile
-  p3/  sudoku_analyzer.c  Makefile  grids/
-  p4/  kernel/fork_guard.c  include/linux/fork_guard.h  hooks/  tools/tier.c
-       build_kernel.sh  tests/
+README.md
+p1/  report_card.c  input.txt  Makefile
+p2/  workload_cpu.h workload_io.h prog_a_cpu.c prog_b_io.c run_experiments.sh Makefile
+p3/  sudoku_analyzer.c  Makefile  grids/
+p4/  kernel/fork_guard.c  include/linux/fork_guard.h  hooks/  tools/tier.c
+      build_kernel.sh  tests/
 ```
 
 ## 3. Problems
@@ -182,22 +181,22 @@ UID TIER FORKS STAGE THROTTLE FREEZE REAP
 - Throughput is about the same for all policies for CPU-bound work (same total work on one core); differences are
   switching overhead.
 
-| Program | Policy / quantum | Invol CS | Vol CS | Avg resp (ms) | Max resp (ms) | Avg turn (ms) | Max turn (ms) | Throughput | Elapsed (s) |
-|---------|------------------|----------|--------|---------------|---------------|---------------|---------------|------------|-------------|
-| A | RR 1 ms | | | | | | | | |
-| A | RR 10 ms | | | | | | | | |
-| A | RR 50 ms | | | | | | | | |
-| A | RR 150 ms | | | | | | | | |
-| A | RR 300 ms | | | | | | | | |
-| A | RR 500 ms | | | | | | | | |
-| A | FIFO | | | | | | | | |
-| B | RR 1 ms | | | | | | | | |
-| B | RR 10 ms | | | | | | | | |
-| B | RR 50 ms | | | | | | | | |
-| B | RR 150 ms | | | | | | | | |
-| B | RR 300 ms | | | | | | | | |
-| B | RR 500 ms | | | | | | | | |
-| B | FIFO | | | | | | | | |
+| Program | Policy / quantum | Invol CS | Vol CS | Avg resp (ms) | Max resp (ms) | Avg turn (ms) | Max turn (ms) | Throughput (c/s) | Elapsed (s) |
+|---|---|---|---|---|---|---|---|---|---|
+| A | RR 1 ms | 1413 | 8 | 11.70 | 25.36 | 5747.35 | 5780.37 | 1.38 | 5.78 |
+| A | RR 10 ms | 430 | 8 | 42.66 | 84.74 | 5077.57 | 5110.35 | 1.57 | 5.11 |
+| A | RR 50 ms | 99 | 8 | 181.82 | 363.62 | 4599.05 | 4664.33 | 1.72 | 4.66 |
+| A | RR 150 ms | 46 | 8 | 556.25 | 1096.18 | 4258.26 | 4686.86 | 1.71 | 4.69 |
+| A | RR 300 ms | 18 | 8 | 1048.55 | 2098.17 | 3610.26 | 4533.87 | 1.76 | 4.53 |
+| A | RR 500 ms | 28 | 8 | 1761.13 | 3516.58 | 4521.64 | 4926.27 | 1.62 | 4.93 |
+| A | FIFO | 12 | 8 | 2060.90 | 4080.86 | 2642.18 | 4652.62 | 1.72 | 4.65 |
+| B | RR 1 ms | 22 | 8 | 12.19 | 25.83 | 83.66 | 88.50 | 90.28 | 0.09 |
+| B | RR 10 ms | 0 | 8 | 19.19 | 36.65 | 24.09 | 41.17 | 193.38 | 0.04 |
+| B | RR 50 ms | 0 | 8 | 19.56 | 35.86 | 24.27 | 40.00 | 198.97 | 0.04 |
+| B | RR 150 ms | 0 | 8 | 20.60 | 38.58 | 25.57 | 42.81 | 186.05 | 0.04 |
+| B | RR 300 ms | 0 | 8 | 20.86 | 39.31 | 26.04 | 43.82 | 181.15 | 0.04 |
+| B | RR 500 ms | 0 | 8 | 20.66 | 38.82 | 25.76 | 43.24 | 184.18 | 0.04 |
+| B | FIFO | 0 | 8 | 20.43 | 38.60 | 25.53 | 43.17 | 184.51 | 0.04 |
 
 ### P3
 - `grid`: written by `main` only while loading, read-only afterwards.
