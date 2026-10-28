@@ -17,9 +17,11 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 1.1](Test-1.1.jpg)
 
+**Observation:** CPU-intensive `yes` processes were launched for both users and restricted to CPU core 0, ensuring that both workloads competed for the same CPU.
+
 ![Test 1.2](Test-1.2.jpg)
 
-**Observation:** Both users had nice value `0` (SILVER) and received approximately 50% CPU time each, confirming fair CPU allocation under equal scheduling weights.
+**Observation:** Both processes had nice value `0` (SILVER) and received approximately 50% CPU time each, confirming fair CPU allocation under equal scheduling weights.
 
 ---
 
@@ -31,11 +33,15 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 2.1](Test-2.1.jpg)
 
+**Observation:** The administrator promoted Alice to GOLD using the `tier set` command while the CPU-intensive workloads were already running.
+
 ![Test 2.2](Test-2.2.jpg)
+
+**Observation:** Alice's running process received nice value `-7`, confirming that the tier change was applied to an existing process without restarting it.
 
 ![Test 2.3](Test-2.3.jpg)
 
-**Observation:** Alice's nice value changed from `0` to `-7`, increasing her CPU share to approximately 83%, while Bob received approximately 17%. The change took effect without restarting either workload.
+**Observation:** Alice's CPU share increased to approximately 83%, while Bob received approximately 17%, consistent with the scheduling weight difference between GOLD and SILVER.
 
 ---
 
@@ -47,9 +53,11 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 3.1](Test-3.1.jpg)
 
+**Observation:** Bob was assigned the BRONZE tier while Alice remained GOLD, increasing the scheduling priority difference between the two users.
+
 ![Test 3.2](Test-3.2.jpg)
 
-**Observation:** Bob's nice value changed to `+5` (BRONZE), while Alice remained GOLD (`-7`). Alice received the majority of CPU time, but Bob continued making measurable progress, confirming that BRONZE was not starved.
+**Observation:** Alice's process retained nice value `-7`, while Bob's changed to `+5`. Alice received most of the CPU time, but Bob continued consuming CPU time, confirming that BRONZE was not starved.
 
 ---
 
@@ -61,9 +69,11 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 4.1](Test-4.1.jpg)
 
+**Observation:** The `tier reset` command cleared the previously assigned GOLD and BRONZE tiers, returning both users to the default SILVER configuration.
+
 ![Test 4.2](Test-4.2.jpg)
 
-**Observation:** Both users returned to nice value `0`, and CPU utilization returned to approximately 50% each. This confirmed that tier assignments could be reset without restarting processes.
+**Observation:** Both processes returned to nice value `0`, and their CPU utilization returned to approximately 50% each, confirming successful restoration of equal scheduling weights.
 
 ---
 
@@ -75,11 +85,15 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 5.1](Test-5.1.jpg)
 
+**Observation:** The fork-containment experiment was initiated for an ordinary user, generating rapid process-creation attempts to test the kernel's monitoring mechanism.
+
 ![Test 5.2](Test-5.2.jpg)
+
+**Observation:** The kernel detected excessive fork attempts and began containment. Fork creation was rejected with `EAGAIN`, producing the `Resource temporarily unavailable` message.
 
 ![Test 5.3](Test-5.3.jpg)
 
-**Observation:** The kernel detected excessive fork attempts and escalated through THROTTLE → FREEZE → REAP. Fork attempts were rejected with `EAGAIN`, the offending process group was terminated, and the shell prompt returned automatically.
+**Observation:** Kernel logs confirmed the complete THROTTLE → FREEZE → REAP sequence. The offending process group was terminated, and the shell prompt returned automatically.
 
 ---
 
@@ -91,9 +105,11 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 6.1](Test-6.1.jpg)
 
+**Observation:** The offending user was promoted to GOLD before initiating the fork-containment experiment, confirming that the test was performed under elevated scheduling privileges.
+
 ![Test 6.2](Test-6.2.jpg)
 
-**Observation:** Despite being assigned GOLD with nice value `-7`, the user triggered the same THROTTLE → FREEZE → REAP sequence. This confirmed that higher CPU scheduling privileges did not bypass fork-containment protection.
+**Observation:** The kernel again executed THROTTLE → FREEZE → REAP, terminating the fork bomb despite the user's GOLD status. This confirmed that scheduling privileges did not override fork-containment protection.
 
 ---
 
@@ -105,9 +121,11 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 7.1](Test-7.1.jpg)
 
+**Observation:** The fork-containment experiment was repeated after reducing the threshold. Kernel logs showed the containment sequence using the updated limit of 50 forks within 500 ms.
+
 ![Test 7.2](Test-7.2.jpg)
 
-**Observation:** The fork threshold was reduced from `200` to `50`, and the monitoring window was changed from `1000 ms` to `500 ms`. Kernel logs confirmed that containment triggered using the updated configuration. The original values were subsequently restored without a kernel rebuild.
+**Observation:** The threshold was changed from `200` to `50` and the monitoring window from `1000 ms` to `500 ms` using `sysctl`. Both parameters were subsequently restored, demonstrating runtime configurability without rebuilding the kernel.
 
 ---
 
@@ -119,7 +137,7 @@ Modify the Linux kernel to implement a graduated fork-rate containment system an
 
 ![Test 8](Test-8.jpg)
 
-**Observation:** `/proc/fork_guard` displayed the active configuration and cumulative THROTTLE, FREEZE, and REAP counters. `/proc/sched_tier` showed no active assignments after reset, and `dmesg` recorded the containment and tier transitions. The VM was running the custom kernel `6.8.0-q4lab`.
+**Observation:** The custom kernel `6.8.0-q4lab` exposed fork-containment statistics through `/proc/fork_guard`, including cumulative THROTTLE, FREEZE, and REAP counters. `/proc/sched_tier` showed no active assignments after reset, while `dmesg` recorded the containment and tier-management events.
 
 ---
 
