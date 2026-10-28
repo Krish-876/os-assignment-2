@@ -45,7 +45,7 @@ for prog in prog_a_cpu prog_b_io; do
         # make sure no child outlives the timeout
         sudo pkill -x "$prog" 2> /dev/null
         {
-            [ "$prog" = prog_a_cpu ] && echo "Program-A (CPU-Bound)" || echo "Program-B (I/O-Bound)"
+            [ "$prog" = prog_a_cpu ] && echo -e "\n\nProgram-A (CPU-Bound)" || echo -e "\n\nProgram-B (I/O-Bound)"
             echo "--------------------------------------------------"
             echo "Scheduling Policy: SCHED_FIFO"
             echo "TIMED OUT (killed after 30s)"

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <pthread.h>
 
 #define MAX_SUBJECTS 32
@@ -145,10 +146,10 @@ static int read_line_int(const char *prompt, int *out)
 static void print_student(const student_stats *s)
 {
     int i;
-    printf("\nStudent ID : %d\n", s->student_id);
-    printf("Average    : %.2f\n", s->average);
-    printf("Minimum    : %d\n", s->minimum);
-    printf("Maximum    : %d\n", s->maximum);
+    printf("Student ID   : %d\n", s->student_id);
+    printf("Average      : %.2f\n", s->average);
+    printf("Minimum      : %d\n", s->minimum);
+    printf("Maximum      : %d\n", s->maximum);
     printf("Subject Marks: [");
     for (i = 0; i < num_subjects; i++)
         printf("%s%d", i ? ", " : "", s->subject_marks[i]);
@@ -185,7 +186,7 @@ static int load_input(const char *path)
 
 int main(int argc, char **argv)
 {
-    const char *path = argc > 1 ? argv[1] : "input.txt";
+    const char *path = argc > 1 ? argv[1] : (access("input.txt", R_OK) == 0 ? "input.txt" : "p1/input.txt");
     pthread_t tid[MAX_STUDENTS];
     int worker_ids[MAX_STUDENTS];            /* persistent thread arguments */
     struct thread_params params[MAX_STUDENTS];
@@ -205,9 +206,12 @@ int main(int argc, char **argv)
         pthread_join(tid[i], NULL);
 
     /* Phase 2: read and validate sort key and k */
+    char prompt[128];
+    snprintf(prompt, sizeof(prompt),
+             "Enter sort key (-3=max, -2=min, -1=avg, 0..%d=subject index): ",
+             num_subjects - 1);
     for (;;) {
-        r = read_line_int("Enter sort key (-3=max, -2=min, -1=avg, 0..N-1=subject index): ",
-                          &sort_key);
+        r = read_line_int(prompt, &sort_key);
         if (r < 0) return 1;
         if (r == 1 && sort_key >= -3 && sort_key < num_subjects) break;
         printf("Invalid sort key. Valid: -3, -2, -1, or 0..%d\n", num_subjects - 1);
@@ -236,12 +240,12 @@ int main(int argc, char **argv)
     kway_merge(k, seg);
 
     /* Phase 3: menu loop, no threads */
-    printf("\n--- Report Card Menu ---\n");
+    printf("--- Report Card Menu ---\n");
     for (;;) {
         char line[128];
         int cmd, id = 0, n;
 
-        printf("\nEnter command (1 <id> = view student, 2 = view all, 0 = exit): ");
+        printf("Enter command (1 <id> = view student, 2 = view all, 0 = exit): ");
         fflush(stdout);
         if (!fgets(line, sizeof(line), stdin)) break;   /* EOF acts like exit */
 
@@ -268,7 +272,6 @@ int main(int argc, char **argv)
             else
                 print_student(found);
         } else if (cmd == 2) {
-            printf("\n");
             for (i = 0; i < num_students; i++) {
                 if (sort_key == -1)
                     printf("s%d %.2f\n", merged[i].student_id, merged[i].average);

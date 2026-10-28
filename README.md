@@ -61,6 +61,7 @@ Files: `workload_cpu.h`, `workload_io.h` (exactly as in header.pdf), `prog_a_cpu
 
 ```
 cd p2 && make
+chmod +x run_experiments.sh
 ./run_experiments.sh             # needs sudo; writes results.txt
 # single run by hand:
 sudo taskset -c 0 chrt -r 20 ./prog_a_cpu "Time Quantum: 50ms"

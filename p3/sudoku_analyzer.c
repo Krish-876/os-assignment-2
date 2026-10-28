@@ -32,6 +32,11 @@
 #include <pthread.h>
 
 #define NUM_UNITS 27
+/* 
+ * 0-8      Rows
+ * 9-17     Columns
+ * 18-26    Blocks
+*/
 
 struct unit_params {
     int unit_id;                /* 0-26 */
@@ -50,13 +55,13 @@ struct block_params {
 };
 
 static int grid[9][9];                  /* 0 = empty */
-static int validity[NUM_UNITS];         /* one writer per index */
-static int missing_masks[NUM_UNITS];    /* parent-filled, read-only afterwards */
-static int dup_masks[NUM_UNITS];
-static int blank_counts[NUM_UNITS];
-static int heatmap[9][9];               /* one writer thread per 3x3 block */
+static int validity[NUM_UNITS];         /* Stores whether each unit is valid. valid = 1, invalid = 0 */
+static int missing_masks[NUM_UNITS];    /* Stores the missing-digit bitmask for each unit. */
+static int dup_masks[NUM_UNITS];        /* Stores the duplicated-digit bitmask for each unit. */
+static int blank_counts[NUM_UNITS];     /* Stores the number of empty cells in each unit. */
+static int heatmap[9][9];               /* Stores the conflict score of every Sudoku cell. */
 
-/* cell (r, c) of unit u: rows 0-8, columns 9-17, sub-grids 18-26 */
+/* converts Unit ID(u) & Position in Unit(i) into actual Row(r) and Column(c) in the grid */
 static void unit_cell(int u, int i, int *r, int *c)
 {
     if (u < 9) {
@@ -74,6 +79,7 @@ static void unit_cell(int u, int i, int *r, int *c)
 
 /* ---------- Phase 1 ---------- */
 
+// Thread Worker to validate each unit, called 27 times
 static void *validate_unit(void *arg)
 {
     const struct unit_params *p = arg;
@@ -111,6 +117,7 @@ static void *validate_unit(void *arg)
 
 /* ---------- Phase 2 ---------- */
 
+// Thread Worker to fill each block of the heatmap grid 9 times
 static void *heatmap_block(void *arg)
 {
     const struct block_params *p = arg;
@@ -125,9 +132,9 @@ static void *heatmap_block(void *arg)
                 heatmap[r][c] = 3;
                 continue;
             }
-            heatmap[r][c] = ((dup_masks[r] >> v) & 1) +
-                            ((dup_masks[9 + c] >> v) & 1) +
-                            ((dup_masks[18 + (r / 3) * 3 + c / 3] >> v) & 1);
+            heatmap[r][c] = ((dup_masks[r] >> v) & 1) +                         /* Row Conflict */
+                            ((dup_masks[9 + c] >> v) & 1) +                     /* Column Conflict */
+                            ((dup_masks[18 + (r / 3) * 3 + c / 3] >> v) & 1);   /* Block Conflict */
         }
     }
     return NULL;
@@ -135,7 +142,8 @@ static void *heatmap_block(void *arg)
 
 /* ---------- input ---------- */
 
-/* returns 0 on success, -1 with a diagnostic on failure */
+// Takes input into the grid, and throws error upon invalid grid
+// returns 0 on success, -1 with a diagnostic on failure
 static int load_grid(const char *path)
 {
     FILE *fp = fopen(path, "r");

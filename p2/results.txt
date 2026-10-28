@@ -1,170 +1,170 @@
-Original sched_rr_timeslice_ms = 50
+Original sched_rr_timeslice_ms = 100
 
 Program-A (CPU-Bound)
 --------------------------------------------------
 Time Quantum: 1ms
-Involuntary Context Switches: 1413
+Involuntary Context Switches: 4147
 Voluntary Context Switches: 8
-Average Response Time:      11.70ms
-Maximum Response Time:      25.36ms
-Average Turnaround Time:    5747.35ms
-Maximum Turnaround Time:    5780.37ms
-Throughput:                 1.38 children/s
-Total Elapsed Time:         5.78s
+Average Response Time:      4.77ms
+Maximum Response Time:      9.15ms
+Average Turnaround Time:    3549.77ms
+Maximum Turnaround Time:    3553.59ms
+Throughput:                 2.25 children/s
+Total Elapsed Time:         3.55s
 
 Program-A (CPU-Bound)
 --------------------------------------------------
 Time Quantum: 10ms
-Involuntary Context Switches: 430
+Involuntary Context Switches: 3886
 Voluntary Context Switches: 8
-Average Response Time:      42.66ms
-Maximum Response Time:      84.74ms
-Average Turnaround Time:    5077.57ms
-Maximum Turnaround Time:    5110.35ms
-Throughput:                 1.57 children/s
-Total Elapsed Time:         5.11s
+Average Response Time:      35.23ms
+Maximum Response Time:      70.17ms
+Average Turnaround Time:    3660.76ms
+Maximum Turnaround Time:    3675.67ms
+Throughput:                 2.18 children/s
+Total Elapsed Time:         3.68s
 
 Program-A (CPU-Bound)
 --------------------------------------------------
 Time Quantum: 50ms
-Involuntary Context Switches: 99
+Involuntary Context Switches: 393
 Voluntary Context Switches: 8
-Average Response Time:      181.82ms
-Maximum Response Time:      363.62ms
-Average Turnaround Time:    4599.05ms
-Maximum Turnaround Time:    4664.33ms
-Throughput:                 1.72 children/s
-Total Elapsed Time:         4.66s
+Average Response Time:      175.25ms
+Maximum Response Time:      351.08ms
+Average Turnaround Time:    3485.12ms
+Maximum Turnaround Time:    3645.81ms
+Throughput:                 2.19 children/s
+Total Elapsed Time:         3.65s
 
 Program-A (CPU-Bound)
 --------------------------------------------------
 Time Quantum: 150ms
-Involuntary Context Switches: 46
+Involuntary Context Switches: 1007
 Voluntary Context Switches: 8
-Average Response Time:      556.25ms
-Maximum Response Time:      1096.18ms
-Average Turnaround Time:    4258.26ms
-Maximum Turnaround Time:    4686.86ms
-Throughput:                 1.71 children/s
-Total Elapsed Time:         4.69s
+Average Response Time:      529.10ms
+Maximum Response Time:      1081.90ms
+Average Turnaround Time:    3126.39ms
+Maximum Turnaround Time:    3616.68ms
+Throughput:                 2.21 children/s
+Total Elapsed Time:         3.62s
 
 Program-A (CPU-Bound)
 --------------------------------------------------
 Time Quantum: 300ms
-Involuntary Context Switches: 18
+Involuntary Context Switches: 407
 Voluntary Context Switches: 8
-Average Response Time:      1048.55ms
-Maximum Response Time:      2098.17ms
-Average Turnaround Time:    3610.26ms
-Maximum Turnaround Time:    4533.87ms
-Throughput:                 1.76 children/s
-Total Elapsed Time:         4.53s
+Average Response Time:      1096.64ms
+Maximum Response Time:      2186.08ms
+Average Turnaround Time:    3198.79ms
+Maximum Turnaround Time:    3742.68ms
+Throughput:                 2.14 children/s
+Total Elapsed Time:         3.74s
 
 Program-A (CPU-Bound)
 --------------------------------------------------
 Time Quantum: 500ms
-Involuntary Context Switches: 28
+Involuntary Context Switches: 966
 Voluntary Context Switches: 8
-Average Response Time:      1761.13ms
-Maximum Response Time:      3516.58ms
-Average Turnaround Time:    4521.64ms
-Maximum Turnaround Time:    4926.27ms
-Throughput:                 1.62 children/s
-Total Elapsed Time:         4.93s
+Average Response Time:      1646.93ms
+Maximum Response Time:      3302.30ms
+Average Turnaround Time:    2122.30ms
+Maximum Turnaround Time:    3804.51ms
+Throughput:                 2.10 children/s
+Total Elapsed Time:         3.80s
 
 Program-A (CPU-Bound)
 --------------------------------------------------
 Scheduling Policy: SCHED_FIFO
-Involuntary Context Switches: 12
+Involuntary Context Switches: 1074
 Voluntary Context Switches: 8
-Average Response Time:      2060.90ms
-Maximum Response Time:      4080.86ms
-Average Turnaround Time:    2642.18ms
-Maximum Turnaround Time:    4652.62ms
-Throughput:                 1.72 children/s
-Total Elapsed Time:         4.65s
+Average Response Time:      1643.65ms
+Maximum Response Time:      3290.36ms
+Average Turnaround Time:    2117.02ms
+Maximum Turnaround Time:    3788.55ms
+Throughput:                 2.11 children/s
+Total Elapsed Time:         3.79s
 
 Program-B (I/O-Bound)
 --------------------------------------------------
 Time Quantum: 1ms
-Involuntary Context Switches: 22
-Voluntary Context Switches: 8
-Average Response Time:      12.19ms
-Maximum Response Time:      25.83ms
-Average Turnaround Time:    83.66ms
-Maximum Turnaround Time:    88.50ms
-Throughput:                 90.28 children/s
-Total Elapsed Time:         0.09s
+Involuntary Context Switches: 765
+Voluntary Context Switches: 53925
+Average Response Time:      0.80ms
+Maximum Response Time:      1.09ms
+Average Turnaround Time:    13500.44ms
+Maximum Turnaround Time:    13503.03ms
+Throughput:                 0.59 children/s
+Total Elapsed Time:         13.50s
 
 Program-B (I/O-Bound)
 --------------------------------------------------
 Time Quantum: 10ms
-Involuntary Context Switches: 0
-Voluntary Context Switches: 8
-Average Response Time:      19.19ms
-Maximum Response Time:      36.65ms
-Average Turnaround Time:    24.09ms
-Maximum Turnaround Time:    41.17ms
-Throughput:                 193.38 children/s
-Total Elapsed Time:         0.04s
+Involuntary Context Switches: 431
+Voluntary Context Switches: 51507
+Average Response Time:      0.91ms
+Maximum Response Time:      1.25ms
+Average Turnaround Time:    13508.48ms
+Maximum Turnaround Time:    13518.23ms
+Throughput:                 0.59 children/s
+Total Elapsed Time:         13.52s
 
 Program-B (I/O-Bound)
 --------------------------------------------------
 Time Quantum: 50ms
-Involuntary Context Switches: 0
-Voluntary Context Switches: 8
-Average Response Time:      19.56ms
-Maximum Response Time:      35.86ms
-Average Turnaround Time:    24.27ms
-Maximum Turnaround Time:    40.00ms
-Throughput:                 198.97 children/s
-Total Elapsed Time:         0.04s
+Involuntary Context Switches: 241
+Voluntary Context Switches: 56938
+Average Response Time:      0.93ms
+Maximum Response Time:      1.31ms
+Average Turnaround Time:    13444.75ms
+Maximum Turnaround Time:    13456.53ms
+Throughput:                 0.59 children/s
+Total Elapsed Time:         13.46s
 
 Program-B (I/O-Bound)
 --------------------------------------------------
 Time Quantum: 150ms
-Involuntary Context Switches: 0
-Voluntary Context Switches: 8
-Average Response Time:      20.60ms
-Maximum Response Time:      38.58ms
-Average Turnaround Time:    25.57ms
-Maximum Turnaround Time:    42.81ms
-Throughput:                 186.05 children/s
-Total Elapsed Time:         0.04s
+Involuntary Context Switches: 220
+Voluntary Context Switches: 60025
+Average Response Time:      0.97ms
+Maximum Response Time:      1.33ms
+Average Turnaround Time:    13385.95ms
+Maximum Turnaround Time:    13395.47ms
+Throughput:                 0.60 children/s
+Total Elapsed Time:         13.40s
 
 Program-B (I/O-Bound)
 --------------------------------------------------
 Time Quantum: 300ms
-Involuntary Context Switches: 0
-Voluntary Context Switches: 8
-Average Response Time:      20.86ms
-Maximum Response Time:      39.31ms
-Average Turnaround Time:    26.04ms
-Maximum Turnaround Time:    43.82ms
-Throughput:                 181.15 children/s
-Total Elapsed Time:         0.04s
+Involuntary Context Switches: 156
+Voluntary Context Switches: 52628
+Average Response Time:      1.15ms
+Maximum Response Time:      1.56ms
+Average Turnaround Time:    13390.51ms
+Maximum Turnaround Time:    13408.00ms
+Throughput:                 0.60 children/s
+Total Elapsed Time:         13.41s
 
 Program-B (I/O-Bound)
 --------------------------------------------------
 Time Quantum: 500ms
-Involuntary Context Switches: 0
-Voluntary Context Switches: 8
-Average Response Time:      20.66ms
-Maximum Response Time:      38.82ms
-Average Turnaround Time:    25.76ms
-Maximum Turnaround Time:    43.24ms
-Throughput:                 184.18 children/s
-Total Elapsed Time:         0.04s
+Involuntary Context Switches: 160
+Voluntary Context Switches: 52946
+Average Response Time:      1.12ms
+Maximum Response Time:      1.50ms
+Average Turnaround Time:    13394.73ms
+Maximum Turnaround Time:    13404.69ms
+Throughput:                 0.60 children/s
+Total Elapsed Time:         13.40s
 
 Program-B (I/O-Bound)
 --------------------------------------------------
 Scheduling Policy: SCHED_FIFO
-Involuntary Context Switches: 0
-Voluntary Context Switches: 8
-Average Response Time:      20.43ms
-Maximum Response Time:      38.60ms
-Average Turnaround Time:    25.53ms
-Maximum Turnaround Time:    43.17ms
-Throughput:                 184.51 children/s
-Total Elapsed Time:         0.04s
+Involuntary Context Switches: 117
+Voluntary Context Switches: 53664
+Average Response Time:      1.14ms
+Maximum Response Time:      1.55ms
+Average Turnaround Time:    7626.87ms
+Maximum Turnaround Time:    7634.63ms
+Throughput:                 1.05 children/s
+Total Elapsed Time:         7.63s
 

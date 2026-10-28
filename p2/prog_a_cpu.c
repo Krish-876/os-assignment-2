@@ -90,21 +90,38 @@ int main(int argc, char **argv)
     }
 
     {
-        struct rusage ru;
+        // Measuring context switches
         double elapsed = ms_between(&ref, &done) / 1000.0;
+
+        struct rusage ru;
         getrusage(RUSAGE_CHILDREN, &ru);
 
+        // Calculate metrics
+        long involuntary_switches = ru.ru_nivcsw;
+        long voluntary_switches = ru.ru_nvcsw;
+
+        double avg_response_time = sum_resp / NUM_CHILDREN;
+        double max_response_time = max_resp;
+
+        double avg_turnaround_time = sum_turn / NUM_CHILDREN;
+        double max_turnaround_time = max_turn;
+
+        double throughput = NUM_CHILDREN / elapsed;
+
+        // Print results
         printf("%s\n", PROG_TITLE);
         printf("--------------------------------------------------\n");
+
         if (argc > 1)
             printf("%s\n", argv[1]);
-        printf("Involuntary Context Switches: %ld\n", ru.ru_nivcsw);
-        printf("Voluntary Context Switches: %ld\n", ru.ru_nvcsw);
-        printf("Average Response Time:      %.2fms\n", sum_resp / NUM_CHILDREN);
-        printf("Maximum Response Time:      %.2fms\n", max_resp);
-        printf("Average Turnaround Time:    %.2fms\n", sum_turn / NUM_CHILDREN);
-        printf("Maximum Turnaround Time:    %.2fms\n", max_turn);
-        printf("Throughput:                 %.2f children/s\n", NUM_CHILDREN / elapsed);
+
+        printf("Involuntary Context Switches: %ld\n", involuntary_switches);
+        printf("Voluntary Context Switches: %ld\n", voluntary_switches);
+        printf("Average Response Time:      %.2fms\n", avg_response_time);
+        printf("Maximum Response Time:      %.2fms\n", max_response_time);
+        printf("Average Turnaround Time:    %.2fms\n", avg_turnaround_time);
+        printf("Maximum Turnaround Time:    %.2fms\n", max_turnaround_time);
+        printf("Throughput:                 %.2f children/s\n", throughput);
         printf("Total Elapsed Time:         %.2fs\n", elapsed);
     }
     return 0;
