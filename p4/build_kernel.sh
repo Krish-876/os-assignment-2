@@ -35,7 +35,7 @@ scripts/config --disable SYSTEM_TRUSTED_KEYS
 scripts/config --disable SYSTEM_REVOCATION_KEYS
 scripts/config --disable DEBUG_INFO
 scripts/config --disable DEBUG_INFO_BTF
-scripts/config --set-str LOCALVERSION "-forkguard"
+scripts/config --set-str LOCALVERSION "-q4lab"
 scripts/config --enable SATA_AHCI      # disk driver must be built in (=y)
 scripts/config --enable VIRTIO_BLK     # otherwise boot drops to (initramfs)
 scripts/config --enable NVME_CORE      # NVMe driver built in (=y) for bare-metal
@@ -51,5 +51,5 @@ gcc -Wall -Wextra -O2 -o "$WORK/tier" "$HERE/tools/tier.c"
 sudo install -m 755 "$WORK/tier" /usr/local/bin/tier
 
 echo
-echo "Done. Reboot, then check:  uname -r   (must end in -forkguard)"
+echo "Done. Reboot, then check:  uname -r   (must end in -q4lab)"
 echo "If boot drops to (initramfs): type reboot and pick the old kernel in GRUB > Advanced options."

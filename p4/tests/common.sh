@@ -15,7 +15,7 @@ need_root() {
 
 need_kernel() {
     if [ ! -e /proc/fork_guard ]; then
-        echo "/proc/fork_guard missing: not running the -forkguard kernel." >&2
+        echo "/proc/fork_guard missing: not running the -q4lab kernel." >&2
         exit 1
     fi
 }

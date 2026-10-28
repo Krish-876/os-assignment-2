@@ -11,7 +11,7 @@
 
 - Ubuntu 24.04 VM on Oracle VirtualBox, 4 cores, 6 GB RAM or more (4 GB is enough for P1-P3), 50 GB disk.
 - gcc, POSIX C. All user-space C is built with `gcc -Wall -Wextra -O2 -pthread` (zero warnings).
-- Problem 4: Linux kernel 6.8, `-forkguard` local version.
+- Problem 4: Linux kernel 6.8, `-q4lab` local version.
 
 ```
 README.md
@@ -130,7 +130,7 @@ Build and install (take a VM snapshot first):
 ```
 cd p4 && chmod +x build_kernel.sh tests/*.sh && ./build_kernel.sh
 sudo reboot
-uname -r                          # must end in -forkguard
+uname -r                          # must end in -q4lab
 ```
 
 Use:
@@ -150,6 +150,9 @@ dmesg -w | grep fork_guard
 Defaults: `fg_enabled=1`, `fg_threshold=200`, `fg_window_ms=1000`, `fg_throttle_ms=40`, `fg_cooldown_s=10`.
 The tests set a low threshold (default 50) and print a warning; run test files as root with `USER_A` / `USER_B`
 set to two ordinary accounts (defaults `alice`, `bob`).
+
+> [!NOTE]
+> For Test 8 (`test8_observability.sh`), `/proc/sched_tier` is displayed at the end after `tier reset` has executed (or when no active assignments remain), so the screenshot shows the header line without active user assignments, representing the clean post-reset state.
 
 `/proc/fork_guard`:
 
@@ -243,13 +246,16 @@ UID TIER FORKS STAGE THROTTLE FREEZE REAP
   `static_prio`, `prio`, `normal_prio` and the load weight, so inheritance does not depend on the parent's nice.
   Only users with an explicit assignment are touched; everyone else keeps normal nice inheritance.
 
-## 5. Known limitations / untested parts
+## 5. Known limitations and runtime testing
 
 - Development was on Windows with WSL. P1, P2 and P3 were compiled and run there with `gcc -Wall -Wextra -O2
   -pthread` with no warnings (P2 was not run under `chrt`/SCHED_RR, only plain execution; valgrind was not run).
-- P4 was **not booted**. What was verified: the 6.8 source was fetched, `apply_hooks.py` applied cleanly to it, and
-  `kernel/fork.o`, `kernel/fork_guard.o` and `kernel/sched/core.o` compile (x86_64 defconfig) without warnings.
-  Runtime behaviour (ladder timing, tier shares, shell recovery, boot) is untested and needs the VM.
+- **P4 Testing**: The modified Linux 6.8 kernel was built and booted on a separate virtual machine using kernel version `6.8.0-q4lab`. Runtime testing and verification were conducted on that VM:
+  - Scheduling tests demonstrated approximately equal CPU shares for SILVER users, increased CPU share for GOLD, reduced but nonzero CPU share for BRONZE, and proper restoration after reset.
+  - Fork-containment tests verified the full ladder progression: THROTTLE → FREEZE → REAP.
+  - Tests confirmed that a GOLD user is also subject to fork containment.
+  - Runtime sysctl retuning and `/proc` observability were tested and verified.
+  - All test screenshots (`p4/results/`) were captured on this separate testing VM.
 - The `-EAGAIN` penalty `msleep` runs in the forking task, so a throttled bomb is also slowed by its own sleeps.
 - Thread creation (`clone`) counts as a fork attempt, so a user running a very thread-heavy job can hit the
   threshold; raise `kernel.fg_threshold` for such workloads.
